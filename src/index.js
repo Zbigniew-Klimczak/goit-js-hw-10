@@ -1,6 +1,5 @@
 import './css/styles.css';
 import _ from 'lodash';
-import Notiflix from 'notiflix';
 import { fetchCountries } from './fetchCountries';
 const DEBOUNCE_DELAY = 300;
 const countryInput = document.querySelector('#search-box');
@@ -14,37 +13,32 @@ countryInput.addEventListener(
       fetchCountries(countryName);
     }
     if (countryName === '' && countryInfo.hasChildNodes()) {
-      document.querySelector('.name').remove();
-      document.querySelector('.capital').remove();
-      document.querySelector('.population').remove();
-      document.querySelector('.languages').remove();
+      countryInfo.replaceChildren();
+    }
+    if (countryName === '' && countryList.hasChildNodes()) {
+      countryList.replaceChildren();
     }
   }, DEBOUNCE_DELAY)
 );
 export function oneCountry(country) {
-  if (countryInfo.hasChildNodes()) {
-    document.querySelector('.name').remove();
-    document.querySelector('.capital').remove();
-    document.querySelector('.population').remove();
-    document.querySelector('.languages').remove();
-  }
+  removeCountries();
   const name = document.createElement('div');
   name.classList.add('name');
   countryInfo.append(name);
   const flag = document.createElement('img');
   flag.classList.add('flag');
-  flag.setAttribute('src', country[0].flags.svg);
+  flag.setAttribute('src', country.flags.svg);
   name.append(flag);
   const heading = document.createElement('h1');
   heading.classList.add('heading');
-  heading.textContent = `${country[0].name.common}`;
+  heading.textContent = `${country.name.common}`;
   name.append(heading);
   const capital = document.createElement('p');
   capital.classList.add('capital');
   const boldCapital = document.createElement('span');
   boldCapital.classList.add('bold');
   boldCapital.textContent = 'Capital: ';
-  capital.textContent = country[0].capital;
+  capital.textContent = country.capital;
   countryInfo.append(capital);
   capital.prepend(boldCapital);
   const population = document.createElement('p');
@@ -52,10 +46,10 @@ export function oneCountry(country) {
   const boldPopulation = document.createElement('span');
   boldPopulation.classList.add('bold');
   boldPopulation.textContent = 'Population: ';
-  population.textContent = country[0].population;
+  population.textContent = country.population;
   countryInfo.append(population);
   population.prepend(boldPopulation);
-  let languagesArray = Object.values(country[0].languages).join(', ');
+  let languagesArray = Object.values(country.languages).join(', ');
   const languages = document.createElement('p');
   languages.classList.add('languages');
   const boldLanguages = document.createElement('span');
@@ -66,13 +60,11 @@ export function oneCountry(country) {
   languages.prepend(boldLanguages);
 }
 export function manyCountries(countries) {
-  console.log('many');
-  if (countryList.hasChildNodes()) {
-    document.querySelector('.country').remove();
-  }
+  removeCountries();
   for (let i = 0; i < countries.length; i++) {
     const country = document.createElement('li');
     country.classList.add(`country`);
+    country.dataset.count = i;
     countryList.append(country);
     const flag = document.createElement('img');
     flag.classList.add('listFlag');
@@ -82,5 +74,16 @@ export function manyCountries(countries) {
     heading.classList.add('listHeading');
     heading.textContent = `${countries[i].name.common}`;
     country.append(heading);
+    country.addEventListener('click', evt => {
+      oneCountry(countries[evt.currentTarget.dataset.count]);
+    });
+  }
+}
+export function removeCountries() {
+  if (countryList.hasChildNodes()) {
+    countryList.replaceChildren();
+  }
+  if (countryInfo.hasChildNodes()) {
+    countryInfo.replaceChildren();
   }
 }

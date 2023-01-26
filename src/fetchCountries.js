@@ -1,5 +1,5 @@
 import Notiflix from 'notiflix';
-import { oneCountry, manyCountries } from '.';
+import { oneCountry, manyCountries, removeCountries } from '.';
 export function fetchCountries(name) {
   fetch(
     `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
@@ -16,18 +16,18 @@ export function fetchCountries(name) {
         Notiflix.Notify.warning(
           'Too many matches found. Please enter a more specific name.'
         );
+        removeCountries();
       }
       if (data.length === 1) {
-        console.log('one country', data);
-        oneCountry(data);
+        oneCountry(data[0]);
       }
       if (data.length >= 2 && data.length <= 10) {
-        console.log('2-10 countries', data);
         manyCountries(data);
       }
     })
     .catch(error => {
       console.log(error);
       Notiflix.Notify.failure('Oops, there is no country with that name');
+      removeCountries();
     });
 }
