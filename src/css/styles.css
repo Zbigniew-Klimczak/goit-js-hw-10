@@ -1,6 +1,9 @@
 * {
   box-sizing: border-box;
 }
+img {
+  display: block;
+}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -21,4 +24,39 @@ body {
 .country-info {
   display: flex;
   flex-direction: column;
+}
+.name {
+  display: flex;
+  grid-gap: 20px;
+  align-items: center;
+  height: 100px;
+}
+.flag {
+  height: 5vh;
+  width: auto;
+}
+.heading {
+  height: 5vh;
+  width: auto;
+}
+.bold {
+  font-weight: bold;
+}
+.country-list {
+  padding: 0;
+}
+.country {
+  display: flex;
+  grid-gap: 20px;
+  align-items: center;
+  height: 4vh;
+  width: max-content;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.listFlag {
+  height: 3vh;
+  width: auto;
+}
+.listHeading {
 }
